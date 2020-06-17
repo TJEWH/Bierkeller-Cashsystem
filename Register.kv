@@ -1,0 +1,929 @@
+#: kivy 1.11.1
+#: import main Register
+#: import BoxLayout kivy.uix.boxlayout
+#: import GridLayout kivy.uix.gridlayout
+#: import CheckBox kivy.uix.checkbox
+#: import Spinner kivy.uix.spinner
+#: import RecycleView kivy.uix.recycleview
+#: import ScrollView kivy.uix.scrollview
+
+<LowerButtons@Button>:
+    font_size: dp(22)
+
+<AddSingle@Button>:
+    text: "Hinzufügen"
+    font_size: dp(18)
+    #disabled: True
+
+<AddCrate@Button>:
+    text: "Hinzufügen"
+    font_size: dp(18)
+    #disabled: True
+
+<SubSingle@Button>:
+    text: "Hinzufügen"
+    font_size: dp(18)
+    #disabled: True
+
+<SubCrate@Button>:
+    text: "Hinzufügen"
+    font_size: dp(18)
+    #disabled: True
+
+<SpinnerOption>:
+    canvas.before:
+        Color:
+            rgba: [0.35, 0.35, 0.35, 0.9]
+        Rectangle:
+            size: self.width + 2, self.height + 2
+            pos: self.pos
+
+<AnzahlSpinner@Spinner>:
+    text: "-- Anzahl auswählen --"
+    color: [0, 0, 0, 0.5]
+    font_size: dp(18)
+    values: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"]
+
+<BierSpinner@Spinner>:
+    text: "-- Artikel auswählen --"
+    color: [0, 0, 0, 0.5]
+    font_size: dp(18)
+
+<NalkSpinner@Spinner>:
+    text: "-- Artikel auswählen --"
+    color: [0, 0, 0, 0.5]
+    font_size: dp(18)
+
+<WeinSpinner@Spinner>:
+    text: "-- Artikel auswählen --"
+    color: [0, 0, 0, 0.5]
+    font_size: dp(18)
+
+<OtherSpinner@Spinner>:
+    text: "-- Artikel auswählen --"
+    color: [0, 0, 0, 0.5]
+    font_size: dp(18)
+
+<ScrollableLabel>:
+    scroll_type: ['bars', 'content']
+    scroll_wheel_distance: dp(10)
+    bar_width: dp(5)
+    canvas.before:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 0.4
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<SelectableButton>:
+    padding: 0, 0
+    spacing: 0
+    canvas.before:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    background_color: [0.7, 0.7, 0.7, 0.7]  if self.selected else [1, 1, 1, 1]  # dark red else dark grey
+    on_press: app.root.get_on_mouse(self)
+
+<SRG@SelectableRecycleGridLayout>:
+    key_selection: 'selectable'
+    cols: 1
+    padding: 0
+    spacing: 0
+    default_size: None, dp(56)
+    default_size_hint: 1, None
+    size_hint_y: None
+    height: self.minimum_height
+    orientation: 'vertical'
+    multiselect: False
+
+
+<OpAcLabel@Label>:
+    canvas.before:
+        Color:
+            rgba: 0.4, 0.4, 0.4, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<ListOpenAccounts>:
+    size_hint: .6, .8
+    title: 'Offene Rechnungen'
+    title_size: dp(20)
+    title_align: 'center'
+    auto_dismiss: False
+
+    col1_row_controller: col1_row_controller
+    col2_row_controller: col2_row_controller
+
+    GridLayout:
+        rows: 3
+        padding: dp(15), dp(10), dp(15), 0
+        spacing: dp(5)
+
+        GridLayout:
+            cols: 2
+            size_hint_y: 0.08
+            spacing: 2
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            OpAcLabel:
+                size_hint_x: .2
+                text: "KäuferID"
+            OpAcLabel:
+                size_hint_x: .5
+                text: "Betrag"
+
+        BoxLayout:
+            RecycleView:
+                size_hint_x: .2
+                data: root.col1_data
+                scroll_wheel_distance: dp(10)
+                bar_width: dp(5)
+                viewclass: 'SelectableButton'
+                SRG:
+                    id: col1_row_controller
+
+            RecycleView:
+                size_hint_x: .5
+                data: root.col2_data
+                scroll_wheel_distance: dp(10)
+                bar_width: dp(5)
+                viewclass: 'SelectableButton'
+                SRG:
+                    id: col2_row_controller
+
+        BoxLayout:
+            size_hint_y: .2
+            orientation: 'horizontal'
+            padding: 0, dp(10)
+            spacing: dp(10)
+            Button:
+                text: 'Abbrechen'
+                font_size: dp(18)
+                on_press: root.dismiss()
+            Button:
+                text: 'Bezahlen'
+                font_size: dp(18)
+                on_press: app.root.update_sum()
+                on_press: app.root.console_output()
+                on_press: app.root.pay_debt()
+                on_release: root.dismiss()
+
+
+<TypeInPopup>:
+    size_hint: .3, .25
+    title: "Setze neuen Wert"
+    edited_total: edited_total
+
+    GridLayout:
+        rows: 2
+        padding: 10
+        spacing: 10
+
+        GridLayout:
+            cols: 2
+            padding: 10
+            spacing: 10
+
+            Label:
+                text: 'Setze neuen Wert:'
+            TextInput:
+                id: edited_total
+                font_size: dp(16)
+                multiline: False
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.5
+            spacing: 10
+
+            Button:
+                text: "Abbrechen"
+                on_release: root.dismiss()
+
+            Button:
+                text: "Fertig"
+                on_press: app.root.update_sum()
+                on_press: app.root.console_output()
+                on_press: root.set_value(edited_total.text)
+                on_release: root.dismiss()
+
+
+<CommissionPopup>:
+    size_hint: .4, .3
+    auto_dismiss: False
+    title: "Kommissionskauf"
+
+    GridLayout:
+        rows: 2
+        padding: 10
+
+        GridLayout:
+            cols: 2
+            rows: 2
+            padding: 10
+            spacing: 10
+
+            Label:
+                text: 'Vorname:'
+                halign: 'right'
+            TextInput:
+                id: commisson_name
+                font_size: dp(16)
+                multiline: False
+            Label:
+                text: 'ZimmerNr:'
+                halign: 'right'
+            TextInput:
+                id: commisson_room
+                font_size: dp(16)
+                multiline: False
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.35
+            spacing: 10
+
+            Button:
+                text: "Abbrechen"
+                on_press: app.root.reset_checkboxes()
+                on_release: root.dismiss()
+
+            Button:
+                text: "Fertig"
+                on_press: root.get_contact(commisson_name.text, commisson_room.text)
+                on_release: root.dismiss()
+
+
+
+<RegisterGUI>:
+    rows: 2
+    spacing: 10
+    padding: 10
+    total: total
+    checkbox_value1: checkbox_value1
+    checkbox_value1: checkbox_value1
+    console_op: console_op
+    commission_btn: commission_btn
+
+    # Obere Hälfte der GUI
+    GridLayout:
+        cols: 2
+        spacing: 10
+        padding: 10
+
+        #
+        BoxLayout:
+            orientation: 'horizontal'
+            height: 30
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_x: .25
+
+                TabbedPanel:
+                    do_default_tab: False
+                    tab_width: self.parent.width / 6
+                    texture_size: self.size
+
+                    TabbedPanelItem:
+                        text: 'Bier'
+                        font_size: dp(18)
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(10), 10, dp(10), dp(10)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Einzelne Flaschen"
+                                        font_size: dp(20)
+
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    BierSpinner:
+                                        id: bier_spinner1
+                                        on_press: root.set_spinner_color(bier_spinner1)
+                                        on_press: root.remove_lst_element('bier_spinner1', 'Leerer Kasten')
+                                        on_is_open: root.set_spinner_color_on_open(bier_spinner1)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner1
+                                        on_press: root.set_spinner_color(nbr_spinner1)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner1)
+                                    AddSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_single(nbr_spinner1.text, bier_spinner1.text)
+                                        on_release: root.reset_spinner(nbr_spinner1, bier_spinner1)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Ganze Kästen"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    BierSpinner:
+                                        id: bier_spinner2
+                                        on_press: root.set_spinner_color(bier_spinner2)
+                                        on_is_open: root.set_spinner_color_on_open(bier_spinner2)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner2
+                                        on_press: root.set_spinner_color(nbr_spinner2)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner2)
+                                    AddCrate:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_crates(nbr_spinner2.text, bier_spinner2.text)
+                                        on_release: root.reset_spinner(nbr_spinner2, bier_spinner2)
+
+                            Label:
+                                size_hint_y: 0.2
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Einzelner Pfand"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    BierSpinner:
+                                        id: bier_spinner3
+                                        on_press: root.set_spinner_color(bier_spinner3)
+                                        on_press: root.remove_lst_element('bier_spinner3', 'Leerer Kasten')
+                                        on_is_open: root.set_spinner_color_on_open(bier_spinner3)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner3
+                                        on_press: root.set_spinner_color(nbr_spinner3)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner3)
+                                    SubSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.sub_sg_deposit(nbr_spinner3.text, bier_spinner3.text)
+                                        on_release: root.reset_spinner(nbr_spinner3, bier_spinner3)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Kastenpfand"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    BierSpinner:
+                                        id: bier_spinner4
+                                        on_press: root.set_spinner_color(bier_spinner4)
+                                        on_is_open: root.set_spinner_color_on_open(bier_spinner4)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner4
+                                        on_press: root.set_spinner_color(nbr_spinner4)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner4)
+                                    SubCrate:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.sub_cr_deposit(nbr_spinner4.text, bier_spinner4.text)
+                                        on_release: root.reset_spinner(nbr_spinner4, bier_spinner4)
+
+
+                    TabbedPanelItem:
+                        text: 'Alkoholfrei'
+                        font_size: dp(18)
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(10), 10, dp(10), dp(10)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Einzelne Flaschen"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    NalkSpinner:
+                                        id: nalk_spinner1
+                                        on_press: root.set_spinner_color(nalk_spinner1)
+                                        on_press: root.remove_lst_element('nalk_spinner1', 'Leerer Kasten')
+                                        on_is_open: root.set_spinner_color_on_open(nalk_spinner1)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner5
+                                        on_press: root.set_spinner_color(nbr_spinner5)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner5)
+                                    AddSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_single(nbr_spinner5.text, nalk_spinner1.text)
+                                        on_release: root.reset_spinner(nbr_spinner5, nalk_spinner1)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Ganze Kästen"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    NalkSpinner:
+                                        id: nalk_spinner2
+                                        on_press: root.set_spinner_color(nalk_spinner2)
+                                        on_press: root.remove_lst_element('nalk_spinner2', 'Red Bull')
+                                        on_is_open: root.set_spinner_color_on_open(nalk_spinner2)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner6
+                                        on_press: root.set_spinner_color(nbr_spinner6)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner6)
+                                    AddCrate:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_crates(nbr_spinner6.text, nalk_spinner2.text)
+                                        on_release: root.reset_spinner(nbr_spinner6, nalk_spinner2)
+
+                            Label:
+                                size_hint_y: 0.2
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Einzelner Pfand"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    NalkSpinner:
+                                        id: nalk_spinner3
+                                        on_press: root.set_spinner_color(nalk_spinner3)
+                                        on_press: root.remove_lst_element('nalk_spinner3', 'Leerer Kasten')
+                                        on_is_open: root.set_spinner_color_on_open(nalk_spinner3)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner7
+                                        on_press: root.set_spinner_color(nbr_spinner7)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner7)
+                                    SubSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.sub_sg_deposit(nbr_spinner7.text, nalk_spinner3.text)
+                                        on_release: root.reset_spinner(nbr_spinner7, nalk_spinner3)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Kastenpfand"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    NalkSpinner:
+                                        id: nalk_spinner4
+                                        on_press: root.set_spinner_color(nalk_spinner4)
+                                        on_press: root.remove_lst_element('nalk_spinner4', 'Red Bull')
+                                        on_is_open: root.set_spinner_color_on_open(nalk_spinner4)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner8
+                                        on_press: root.set_spinner_color(nbr_spinner8)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner8)
+                                    SubCrate:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.sub_cr_deposit(nbr_spinner8.text, nalk_spinner4.text)
+                                        on_release: root.reset_spinner(nbr_spinner8, nalk_spinner4)
+
+                    TabbedPanelItem:
+                        text: 'Weine'
+                        font_size: dp(18)
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(10), 10, dp(10), dp(10)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Einzelne Flaschen"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    WeinSpinner:
+                                        id: wein_spinner1
+                                        on_press: root.set_spinner_color(wein_spinner1)
+                                        on_is_open: root.set_spinner_color_on_open(wein_spinner1)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner9
+                                        on_press: root.set_spinner_color(nbr_spinner9)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner9)
+                                    AddSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_single(nbr_spinner9.text, wein_spinner1.text)
+                                        on_release: root.reset_spinner(nbr_spinner9, wein_spinner1)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Ganze Kästen"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    WeinSpinner:
+                                        id: wein_spinner2
+                                        on_press: root.set_spinner_color(wein_spinner2)
+                                        on_is_open: root.set_spinner_color_on_open(wein_spinner2)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner10
+                                        on_press: root.set_spinner_color(nbr_spinner10)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner10)
+                                    AddCrate:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_crates(nbr_spinner10.text, wein_spinner2.text)
+                                        on_release: root.reset_spinner(nbr_spinner10, wein_spinner2)
+
+                            Label:
+                                size_hint_y: 0.2
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Einzelner Pfand"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    WeinSpinner:
+                                        id: wein_spinner3
+                                        on_press: root.set_spinner_color(wein_spinner3)
+                                        on_is_open: root.set_spinner_color_on_open(wein_spinner3)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner11
+                                        on_press: root.set_spinner_color(nbr_spinner11)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner11)
+                                    SubSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.sub_sg_deposit(nbr_spinner11.text, wein_spinner3.text)
+                                        on_release: root.reset_spinner(nbr_spinner11, wein_spinner3)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+
+                                    Label:
+                                        text: "Kastenpfand"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    WeinSpinner:
+                                        id: wein_spinner4
+                                        on_press: root.set_spinner_color(wein_spinner4)
+                                        on_is_open: root.set_spinner_color_on_open(wein_spinner4)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner12
+                                        on_press: root.set_spinner_color(nbr_spinner12)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner12)
+                                    SubCrate:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.sub_cr_deposit(nbr_spinner12.text, wein_spinner4.text)
+                                        on_release: root.reset_spinner(nbr_spinner12, wein_spinner4)
+
+
+                    TabbedPanelItem:
+                        text: 'Sonstiges'
+                        font_size: dp(18)
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            padding: dp(10), 10, dp(10), dp(10)
+
+                            GridLayout:
+                                rows: 2
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    size_hint_y: .4
+                                    Label:
+                                        text: "Einzelne Artikel"
+                                        font_size: dp(20)
+                                    Label:
+                                    Label:
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    padding: 10
+                                    spacing: 10
+
+                                    OtherSpinner:
+                                        id: other_spinner1
+                                        on_press: root.set_spinner_color(other_spinner1)
+                                        on_is_open: root.set_spinner_color_on_open(other_spinner1)
+                                    AnzahlSpinner:
+                                        id: nbr_spinner13
+                                        on_press: root.set_spinner_color(nbr_spinner13)
+                                        on_is_open: root.set_spinner_color_on_open(nbr_spinner13)
+                                    AddSingle:
+                                        on_press: root.update_sum()
+                                        on_press: root.console_output()
+                                        on_press: root.add_single(nbr_spinner13.text, other_spinner1.text)
+                                        on_release: root.reset_spinner(nbr_spinner13, other_spinner1)
+
+                            Label:
+                            Label:
+                                size_hint_y: 0.2
+                            Label:
+                            Label:
+
+
+        GridLayout:
+            id: right_panel
+            rows: 4
+            size_hint_x: .4
+            padding: dp(10), 10, 0, 0
+            spacing: 20
+
+            Label:
+                size_hint_y: 0.04
+
+            Button:
+                font_size: dp(18)
+                size_hint_y: 0.15
+                text: 'offene Rechnungen'
+                on_press: root.display_open_accounts()
+                id: commission_btn
+
+
+            # Warenkorb
+            GridLayout:
+                rows: 2
+                spacing: dp(10)
+                padding: dp(20), dp(10), dp(20), dp(20)
+                canvas.before:
+                    Color:
+                        rgba: 0.6, 0.6, 0.6, 0.3
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                Label:
+                    text: "Warenkorb"
+                    underline: True
+                    font_size: dp(22)
+                    size_hint_y: 0.1
+
+                ScrollableLabel:
+                    Label:
+                        padding: dp(10), dp(10)
+                        font_size: dp(18.5)
+                        text: 'Warenkorb leer'
+                        id: console_op
+                        color: [0, 0, 0, 0.35]
+                        text_size: self.size
+                        valign: 'middle'
+                        halign: "center"
+                        #size_hint_y: None
+                        height: self.texture_size[1]
+
+            # Aktuelle Summe + CheckBoxes
+            GridLayout:
+                rows: 2
+                spacing: dp(10)
+                size_hint_y: 0.45
+
+                # Bereich zeigt aktuelle Summe an
+                GridLayout:
+                    cols: 2
+                    spacing: 10
+                    padding: 10
+                    size_hint_y: 0.4
+                    canvas.before:
+                        Color:
+                            rgba: 0.6, 0.6, 0.6, 0.3
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                    Label:
+                        text: 'Summe: '
+                        size_hint_x: .4
+                        font_size: dp(20)
+
+                    Label:
+                        text: '0,00€'
+                        id: total
+                        size_hint_x: .4
+                        font_size: dp(24)
+
+                # Checkboxes
+                BoxLayout:
+                    size_hint_y: 0.6
+                    orientation: 'vertical'
+                    canvas.before:
+                        Color:
+                            rgba: 0.6, 0.6, 0.6, 0.3
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+                    GridLayout:
+                        rows: 2
+                        padding: dp(25), dp(10)
+
+                        GridLayout:
+                            cols: 3
+
+                            Label:
+                                text: "Auf Kommission"
+                                font_size: dp(18)
+                            Label:
+                                size_hint_x: 0.3
+                            CheckBox:
+                                id: checkbox_value1
+                                on_active: root.check_on_commission(self, self.active)
+                                size_hint_x: 0.4
+
+                        GridLayout:
+                            cols: 3
+                            Label:
+                                text: "Mitarbeiterpreis"
+                                font_size: dp(18)
+                            Label:
+                                size_hint_x: 0.3
+                            CheckBox:
+                                id: checkbox_value2
+                                on_active: root.switch_to_employee(self, self.active)
+                                on_active: root.reset_single_checkbox('checkbox_value1')
+                                on_active: root.update_sum()
+                                on_active: root.reset_output()
+                                size_hint_x: 0.4
+
+    BoxLayout:
+        orientation: 'horizontal'
+        spacing: 10
+        padding: 10
+        cols: 4
+        size_hint_y: None
+        height: dp(80)
+
+        LowerButtons:
+            text: 'Beenden'
+            on_press: root.dismiss()
+            id: exit_btn
+
+        LowerButtons:
+            text: 'Abbrechen'
+            on_press: root.update_sum()
+            on_press: root.reset_output()
+            on_press: root.reset_checkboxes()
+            on_press: root.reset_all_spinners()
+            on_press: root.cancel()
+            id: cancel_btn
+
+        LowerButtons:
+            text: 'Bearbeiten'
+            #text: 'Rückgängig'
+            #disabled: True
+            on_press: root.edit()
+            #on_press: root.update_sum()
+            #on_press: root.console_output()
+            #on_press: root.remove_last_entry(edit_btn)
+            id: edit_btn
+
+        LowerButtons:
+            text: 'Fertig'
+            on_press: root.update_open_accounts()
+            on_press: root.update_sum()
+            on_press: root.reset_output()
+            on_press: root.reset_checkboxes()
+            on_press: root.reset_all_spinners()
+            on_press: root.finish()
+            id: finish_btn
+
